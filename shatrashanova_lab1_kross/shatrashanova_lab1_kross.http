@@ -1,0 +1,6 @@
+@shatrashanova_lab1_kross_HostAddress = http://localhost:5115
+
+GET {{shatrashanova_lab1_kross_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
