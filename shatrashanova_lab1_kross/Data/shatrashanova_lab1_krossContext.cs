@@ -16,15 +16,6 @@ namespace shatrashanova_lab1_kross.Data
 
         public DbSet<shatrashanova_lab1_kross.Models.Exercise> Exercise { get; set; } = default!;
         public DbSet<shatrashanova_lab1_kross.Models.Workout> Workout { get; set; } = default!;
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Workout>()
-        //        .Property(w => w.ID)
-        //        .ValueGeneratedNever(); // Отключаем автоинкремент
-        //    modelBuilder.Entity<Exercise>()
-        //        .Property(w => w.ID)
-        //        .ValueGeneratedNever(); // Отключаем автоинкремент
-        //}
 
 
     }

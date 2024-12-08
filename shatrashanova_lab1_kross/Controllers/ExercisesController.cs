@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,56 +35,96 @@ namespace shatrashanova_lab1_kross.Controllers
         [HttpGet("{id}")]
         public IActionResult GetExercise(int id)
         {
-            var exercise = _context.Exercise.Find(id);
-            if (exercise == null)
+            try
             {
-                return NotFound();
+                var exercise = _context.Exercise.Find(id);
+                if (exercise == null)
+                {
+                    return NotFound();
+                }
+                return new JsonResult(JsonConvert.SerializeObject(exercise));
             }
-            return new JsonResult(JsonConvert.SerializeObject(exercise));
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // POST: api/exercise
         [HttpPost]
-        public IActionResult PostExercise([FromBody]Exercise exercise)
+        public IActionResult PostExercise([FromBody]ExerciseDTO exercise)
         {
-            _context.Exercise.Add(new Exercise
+            try
             {
-                Name = exercise.Name,
-                Type = exercise.Type,
-                Repetitions = exercise.Repetitions,
-                Duration = exercise.Duration
-            });
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetExercise), new { id = exercise.ID }, exercise);
+                _context.Exercise.Add(new Exercise
+                {
+                    Name = exercise.Name,
+                    Type = exercise.Type,
+                    Repetitions = exercise.Repetitions,
+                    Duration = exercise.Duration
+                });
+                _context.SaveChanges();
+                return CreatedAtAction(nameof(GetExercise), new { id = exercise.ID }, exercise);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/exercise/{id}
         [HttpPut("{id}")]
-        public IActionResult PutExercise(int id, [FromBody]Exercise exercise)
+        public IActionResult PutExercise(int id, [FromBody]ExerciseDTO exerciseDTO)
         {
-            if (id != exercise.ID)
+            try
             {
-                return BadRequest();
-            }
+                if (exerciseDTO == null)
+                {
+                    return BadRequest();
+                }
+                
 
-            _context.Entry(exercise).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
-            return NoContent();
+                var existingExercise = _context.Exercise.Find(exerciseDTO.ID);
+                
+                if (existingExercise == null)
+                {
+                    return NotFound();
+                }
+
+                existingExercise.Name = exerciseDTO.Name;
+                existingExercise.Type = exerciseDTO.Type;
+                existingExercise.Repetitions = exerciseDTO.Repetitions;
+                existingExercise.Duration = exerciseDTO.Duration;
+                _context.Entry(existingExercise).State = EntityState.Modified;
+                _context.SaveChanges();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/exercise/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteExercise(int id)
         {
-            var exercise = _context.Exercise.Find(id);
-            if (exercise == null)
+            try
             {
-                return NotFound();
-            }
+                var exercise = _context.Exercise.Find(id);
+                if (exercise == null)
+                {
+                    return NotFound();
+                }
 
-            _context.Exercise.Remove(exercise);
-            _context.SaveChanges();
-            return NoContent();
+                _context.Exercise.Remove(exercise);
+                _context.SaveChanges();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 

@@ -4,11 +4,19 @@ namespace shatrashanova_lab1_kross.Models
 {
     public class Workout
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public int ID { get; set; }
         public DateTime Date { get; set; }
-        
-        public List<Exercise> Exercises { get; set; }
+
+        public List<Exercise> Exercises { get; set; } = [];
+
+    }
+
+    public class WorkoutDTO
+    {
+        public int ID { get; set; }
+        public DateTime Date { get; set; }
+
+        public List<int> Exercises { get; set; } = [];
 
     }
 }
