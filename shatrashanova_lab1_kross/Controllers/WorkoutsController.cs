@@ -86,11 +86,17 @@ namespace shatrashanova_lab1_kross.Controllers
                     }
                 }
 
-                _context.Workout.Add(new Workout
+                var workout = new Workout
                 {
                     Date = workoutDTO.Date,
                     Exercises = exercises
-                });
+                };
+                if (!workout.IsAllowed())
+                {
+                    return new JsonResult(new { status = "Warning!", text = "You can't add workout with this parameters because it may harm your health. Try to choose another exercises. Take care of yourself :)" });
+                }
+
+                _context.Workout.Add(workout);
                 _context.SaveChanges();
 
                 return CreatedAtAction(nameof(GetWorkout), new { id = workoutDTO.ID }, workoutDTO);
@@ -103,7 +109,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // PUT: api/workout/{id}
         [HttpPut("{id}")]
-        public IActionResult PutWorkout(int id, [FromBody]WorkoutDTO workoutDTO) // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        public IActionResult PutWorkout(int id, [FromBody]WorkoutDTO workoutDTO) 
         {
             if (id != workoutDTO.ID)
             {
@@ -129,6 +135,11 @@ namespace shatrashanova_lab1_kross.Controllers
                 var exercises = _context.Exercise.Where(e=> workoutDTO.Exercises.Contains(e.ID)).ToList();
 
                 workout.Exercises.AddRange(exercises);
+
+                if (!workout.IsAllowed())
+                {
+                    return new JsonResult(new { status = "Warning!", text = "You can't add workout with this parameters because it may harm your health. Try to choose another exercises. Take care of yourself :)" });
+                }
                 // Обновляем данные тренировки
                 _context.Entry(workout).State = EntityState.Modified;
 

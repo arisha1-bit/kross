@@ -14,8 +14,8 @@ namespace shatrashanova_lab1_kross.Models
                     if (!context.Exercise.Any())
                     {
                         context.Exercise.AddRange(
-                            new Exercise { Name = "Push-ups", Type = "Strength", Repetitions = 15, Duration = 5 },
-                            new Exercise { Name = "Running", Type = "Cardio", Repetitions = 0, Duration = 30 }
+                            new Exercise { Name = "Push-ups", Type = "Strength", Repetitions = 15, Calories = 100, Duration = 5 },
+                            new Exercise { Name = "Running", Type = "Cardio", Repetitions = 1, Calories = 300, Duration = 30 }
                         );
                     }
 
@@ -26,7 +26,7 @@ namespace shatrashanova_lab1_kross.Models
                             Date = DateTime.Now,
                             Exercises = new List<Exercise>
                     {
-                        new Exercise { Name = "Squats", Type = "Strength", Repetitions = 20, Duration = 10 }
+                        new Exercise { Name = "Squats", Type = "Strength", Repetitions = 20, Calories=150, Duration = 10 }
                     }
                         });
                     }

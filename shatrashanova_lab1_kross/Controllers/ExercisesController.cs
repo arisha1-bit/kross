@@ -54,6 +54,11 @@ namespace shatrashanova_lab1_kross.Controllers
         [HttpPost]
         public IActionResult PostExercise([FromBody]ExerciseDTO exercise)
         {
+            if (!exercise.IsAllowed())
+            {
+                return new JsonResult(new { status = "Warning!", text = "You can't add exercise with this parameters because it may harm your health. Take care of yourself :)" }); 
+            }
+
             try
             {
                 _context.Exercise.Add(new Exercise
@@ -76,6 +81,11 @@ namespace shatrashanova_lab1_kross.Controllers
         [HttpPut("{id}")]
         public IActionResult PutExercise(int id, [FromBody]ExerciseDTO exerciseDTO)
         {
+            if (!exerciseDTO.IsAllowed())
+            {
+                return new JsonResult(new { status = "Warning!", text = "You can't add exercise with this parameters because it may harm your health. Take care of yourself :)" });
+            }
+
             try
             {
                 if (exerciseDTO == null)

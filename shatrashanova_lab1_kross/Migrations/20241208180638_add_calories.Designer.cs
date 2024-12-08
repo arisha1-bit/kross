@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using shatrashanova_lab1_kross.Data;
 
@@ -11,9 +12,11 @@ using shatrashanova_lab1_kross.Data;
 namespace shatrashanova_lab1_kross.Migrations
 {
     [DbContext(typeof(shatrashanova_lab1_krossContext))]
-    partial class shatrashanova_lab1_krossContextModelSnapshot : ModelSnapshot
+    [Migration("20241208180638_add_calories")]
+    partial class add_calories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
