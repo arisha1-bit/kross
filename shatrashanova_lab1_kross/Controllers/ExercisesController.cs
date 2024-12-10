@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // POST: api/exercise
         [HttpPost]
+        [Authorize]
         public IActionResult PostExercise([FromBody]ExerciseDTO exercise)
         {
             if (!exercise.IsAllowed())
@@ -79,6 +81,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // PUT: api/exercise/{id}
         [HttpPut("{id}")]
+        [Authorize]
         public IActionResult PutExercise(int id, [FromBody]ExerciseDTO exerciseDTO)
         {
             if (!exerciseDTO.IsAllowed())
@@ -117,6 +120,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // DELETE: api/exercise/{id}
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult DeleteExercise(int id)
         {
             try

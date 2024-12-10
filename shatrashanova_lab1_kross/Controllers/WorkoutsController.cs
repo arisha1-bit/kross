@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using shatrashanova_lab1_kross.Data;
 using shatrashanova_lab1_kross.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace shatrashanova_lab1_kross.Controllers
 {
@@ -66,6 +67,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // POST: api/workout
         [HttpPost]
+        [Authorize]
         public IActionResult PostWorkout([FromBody]WorkoutDTO workoutDTO)
         {
             // Проверяем, есть ли упражнения, и корректно ли они привязаны
@@ -109,6 +111,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // PUT: api/workout/{id}
         [HttpPut("{id}")]
+        [Authorize]
         public IActionResult PutWorkout(int id, [FromBody]WorkoutDTO workoutDTO) 
         {
             if (id != workoutDTO.ID)
@@ -154,6 +157,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // DELETE: api/workout/{id}
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult DeleteWorkout(int id)
         {
             try
