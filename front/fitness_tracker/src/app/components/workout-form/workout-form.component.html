@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>{{ data ? 'Редактировать Воркаут' : 'Добавить Воркаут' }}</h2>
+<form [formGroup]="workoutForm" (ngSubmit)="onSubmit()">
+  <!-- Дата воркаута -->
+  <mat-form-field appearance="fill">
+    <mat-label>Дата</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="date" required />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- Продолжительность -->
+  <mat-form-field appearance="fill">
+    <mat-label>Продолжительность (мин)</mat-label>
+    <input matInput type="number" formControlName="duration" required />
+  </mat-form-field>
+
+  <!-- Действия -->
+  <div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Отмена</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="workoutForm.invalid">
+      Сохранить
+    </button>
+  </div>
+</form>

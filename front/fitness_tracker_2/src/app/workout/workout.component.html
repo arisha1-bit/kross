@@ -1,0 +1,32 @@
+<div>
+<div id="workouts" class="workouts">
+    <div class="workout-card" *ngFor="let workout of workouts; index as i">
+      <h3>{{ workout.id }}</h3>
+      <p>Date: {{ workout.date.toString() }}</p>
+      <p>Exercises: {{ workout.exercises }}</p>
+    </div>
+</div>
+<button (click)="fetchWorkouts()" class="btn">get</button>
+
+</div>
+
+<button (click)="toggleForm()">post</button>
+
+<div *ngIf="showForm">
+  <h3>Add New Workout</h3>
+  <form (ngSubmit)="addWorkout()">
+    <label for="exercises">exercises:</label>
+    <select id="exercises" [(ngModel)]="selectedExercises" name="selectedExercises" multiple>
+      <option *ngFor="let exercise of exercises" [value]="exercise.id">
+        {{ exercise.id }} - {{ exercise.name }}
+      </option>
+    </select>
+
+    <button type="submit">Add Workout</button>
+    
+  </form>
+  
+</div>
+<p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+  

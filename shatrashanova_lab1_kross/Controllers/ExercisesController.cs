@@ -10,40 +10,50 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using shatrashanova_lab1_kross.Data;
 using shatrashanova_lab1_kross.Models;
+using shatrashanova_lab1_kross.Manager;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace shatrashanova_lab1_kross.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ExercisesController : Controller
+
+
     {
         private readonly shatrashanova_lab1_krossContext _context;
-
+        public Manager.Manager manager;
         public ExercisesController(shatrashanova_lab1_krossContext context)
         {
             _context = context;
+            manager = new Manager.Manager(context);
         }
 
         // GET: api/exercise
         [HttpGet]
-        public IActionResult GetExercises()
+        public ActionResult<List<Exercise>> GetExercises()
+
         {
-            return new JsonResult(JsonConvert.SerializeObject(_context.Exercise.ToList()));
+            try
+            {   
+                return manager.GetExercise();
+               
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        
            
         }
 
         // GET: api/exercise/{id}
         [HttpGet("{id}")]
-        public IActionResult GetExercise(int id)
+        public ActionResult<Exercise> GetExercise(int id)
         {
             try
             {
-                var exercise = _context.Exercise.Find(id);
-                if (exercise == null)
-                {
-                    return NotFound();
-                }
-                return new JsonResult(JsonConvert.SerializeObject(exercise));
+                return manager.GetSigleExercise(id);
             }
             catch (Exception ex)
             {
@@ -54,24 +64,18 @@ namespace shatrashanova_lab1_kross.Controllers
         // POST: api/exercise
         [HttpPost]
         [Authorize]
-        public IActionResult PostExercise([FromBody]ExerciseDTO exercise)
+        public ActionResult<string> PostExercise([FromBody]ExerciseDTO exercise)
         {
-            if (!exercise.IsAllowed())
-            {
-                return new JsonResult(new { status = "Warning!", text = "You can't add exercise with this parameters because it may harm your health. Take care of yourself :)" }); 
-            }
+            
 
             try
             {
-                _context.Exercise.Add(new Exercise
+                
+                if (!exercise.IsAllowed())
                 {
-                    Name = exercise.Name,
-                    Type = exercise.Type,
-                    Repetitions = exercise.Repetitions,
-                    Duration = exercise.Duration
-                });
-                _context.SaveChanges();
-                return CreatedAtAction(nameof(GetExercise), new { id = exercise.ID }, exercise);
+                    return BadRequest("{\"message\":\"You can't add workout with this parameters because it may harm your health. Try to choose another exercises. Take care of yourself :)\"}");
+                }
+                return manager.PostExercise(exercise);
             }
             catch (Exception ex)
             {
@@ -82,11 +86,11 @@ namespace shatrashanova_lab1_kross.Controllers
         // PUT: api/exercise/{id}
         [HttpPut("{id}")]
         [Authorize]
-        public IActionResult PutExercise(int id, [FromBody]ExerciseDTO exerciseDTO)
+        public ActionResult PutExercise(int id, [FromBody]ExerciseDTO exerciseDTO)
         {
             if (!exerciseDTO.IsAllowed())
             {
-                return new JsonResult(new { status = "Warning!", text = "You can't add exercise with this parameters because it may harm your health. Take care of yourself :)" });
+                return BadRequest("{\"message\":\"You can't add workout with this parameters because it may harm your health. Try to choose another exercises. Take care of yourself :)\"}");
             }
 
             try
@@ -121,7 +125,7 @@ namespace shatrashanova_lab1_kross.Controllers
         // DELETE: api/exercise/{id}
         [HttpDelete("{id}")]
         [Authorize]
-        public IActionResult DeleteExercise(int id)
+        public ActionResult DeleteExercise(int id)
         {
             try
             {

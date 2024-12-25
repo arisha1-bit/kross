@@ -25,21 +25,21 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // GET: api/workout
         [HttpGet]
-        public IActionResult GetWorkouts()
+        public ActionResult<List<WorkoutDTO>> GetWorkouts()
         {
             var workouts = _context.Workout.Include(w => w.Exercises).ToList(); // Подгружаем связанные упражнения
 
-            return new JsonResult(JsonConvert.SerializeObject(workouts
+            return workouts
                 .Select(x => new WorkoutDTO { 
                     ID = x.ID,
                     Date = x.Date,
                     Exercises = x.Exercises.Select(x => x.ID).ToList()
-                }).ToList()));
+                }).ToList();
         }
 
         // GET: api/workout/{id}
         [HttpGet("{id}")]
-        public IActionResult GetWorkout(int id)
+        public ActionResult<WorkoutDTO> GetWorkout(int id)
         {
             try
             {
@@ -52,12 +52,12 @@ namespace shatrashanova_lab1_kross.Controllers
                     return NotFound();
                 }
 
-                return new JsonResult(JsonConvert.SerializeObject(
+                return 
                     new WorkoutDTO { 
                         ID = workout.ID,
                         Date = workout.Date,
                         Exercises = workout.Exercises.Select(x=>x.ID).ToList()
-                    }));
+                    };
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace shatrashanova_lab1_kross.Controllers
         // POST: api/workout
         [HttpPost]
         [Authorize]
-        public IActionResult PostWorkout([FromBody]WorkoutDTO workoutDTO)
+        public ActionResult PostWorkout([FromBody]WorkoutDTO workoutDTO)
         {
             // Проверяем, есть ли упражнения, и корректно ли они привязаны
             try
@@ -95,7 +95,7 @@ namespace shatrashanova_lab1_kross.Controllers
                 };
                 if (!workout.IsAllowed())
                 {
-                    return new JsonResult(new { status = "Warning!", text = "You can't add workout with this parameters because it may harm your health. Try to choose another exercises. Take care of yourself :)" });
+                    return BadRequest("{\"message\":\"You can't add workout with this parameters because it may harm your health. Try to choose another exercises. Take care of yourself :)\"}");
                 }
 
                 _context.Workout.Add(workout);
@@ -112,7 +112,7 @@ namespace shatrashanova_lab1_kross.Controllers
         // PUT: api/workout/{id}
         [HttpPut("{id}")]
         [Authorize]
-        public IActionResult PutWorkout(int id, [FromBody]WorkoutDTO workoutDTO) 
+        public ActionResult PutWorkout(int id, [FromBody]WorkoutDTO workoutDTO) 
         {
             if (id != workoutDTO.ID)
             {
@@ -158,7 +158,7 @@ namespace shatrashanova_lab1_kross.Controllers
         // DELETE: api/workout/{id}
         [HttpDelete("{id}")]
         [Authorize]
-        public IActionResult DeleteWorkout(int id)
+        public ActionResult DeleteWorkout(int id)
         {
             try
             {
@@ -183,7 +183,7 @@ namespace shatrashanova_lab1_kross.Controllers
 
         // Дополнительный запрос: Тренировки длительностью более 60 минут
         [HttpGet("long")]
-        public IActionResult GetLongWorkouts()
+        public ActionResult<List<WorkoutDTO>> GetLongWorkouts()
         {
             try
             {
@@ -192,13 +192,13 @@ namespace shatrashanova_lab1_kross.Controllers
                     .Where(w => w.Exercises.Sum(e => e.Duration) > 60) // Фильтрация по общей длительности
                     .ToList();
 
-                return new JsonResult(JsonConvert.SerializeObject(longWorkouts
+                return longWorkouts
                 .Select(x => new WorkoutDTO
                 {
                     ID = x.ID,
                     Date = x.Date,
                     Exercises = x.Exercises.Select(x => x.ID).ToList()
-                }).ToList()));
+                }).ToList();
             }
             catch (Exception ex)
             {
